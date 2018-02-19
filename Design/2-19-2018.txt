@@ -1,0 +1,294 @@
+import java.io.Console;
+import java.io.File
+
+public class gitlite {
+
+	if seralised: // to pesist between runs
+		HashSet<String> stage = new HashSet<String>();
+			// needs tobe seralised out to file
+			/* what is the purpose of the stage?
+			 * keep track of files that have been added,
+			 * remove files from the stage,
+			 *
+			 * Need to figure out a way to incorporate key/value
+			 * to access the commits, which are ordered
+			 * key: commit_id
+			 * value: node
+			 * things to consider: runtime, order signifigance
+			 */
+
+	/*
+		Add command
+			user types "Java Gitlite add [file name]"
+			failure cases
+				if the file does not exist, print("File does not exist")
+				exit
+				else read the file for changes
+					if there are no changes print("File has not been modified")
+					else stage the file (ASK: how do you represent this in LL?)
+					exit
+
+			public add(String fileName) {
+				
+			}
+	*/
+
+	public add(String fileName) {
+		File f = new File(fileName);
+		if (!f.exists()) {
+			System.out.println("File does not exist")
+			return; // or System.exit? This might take you out of the whole program though
+		} /* if ([unchanged function](fileName)) {
+			System.out.println("File has not been modified")
+		} */ else {
+			stagedFiles.put(fileName, null); //adds link
+		}
+	}
+
+	public remove(String fileName) {
+		if (!f.exists) {
+			System.out.println("File not found");
+		} if (stagedFiles.???(fileName)) {
+			stagedFiles.remove(fileName);
+			filesForRemoval.add(fileName);
+		} else {
+			System.out.println("No reason to remove the file"); //if unstaged
+		}
+	}
+}
+
+================================
+
+	/* Initialise command
+	* java gitlet init
+	user types "initali commit"
+	failure cases
+		if there is a already one have the system, exit & print the error
+			A Gitlite version control system already exists in the current directory.
+			exit
+	else return an empty **tree**
+
+	** catch "init"
+	** check if there is already a repository --> figure out where you store existing and check that
+	** if error quit & print
+	** make directory (tree) save it???
+		*commit w/ message
+	*/
+
+============ Commit Class/Object===============
+
+	/** make a copy & saves it in a folder
+	 **	grab old copies that were not modified
+	 ** stores multiple copies in map
+	 ** saves them in an 'out-of-the-way' location
+	 		** likely .Commit_# folders for protection
+
+		public class Commit {
+		
+		public class commitItems {
+			public Int commitID;
+			public Date commitTime;
+			public String commitMessage;
+			public HashMap commitMap;
+			public Node previousPointer;
+		
+			public commitItems(Int id, Date t, String m, HashMap map, Node n) {
+				this.commitID = id;
+				this.commitTime = t;
+				this.commitMessage = m;
+				this.commitMap = map;
+				this.previousPointer = n;
+			}
+		}
+
+		I'm going to continue the tree structure of the initial commit
+		with all subsequent commits. Each commit will have a directory
+		that is named in accordance of its commit number, eg Commit_1,
+		Commit_2, etc. Each folder will contain information of each
+		commit's newly commited file(s), the commit ID, the date/time,
+		the commit message, a copy of a map of the program and the 
+		previous pointer thus far. The map's key will be the name of 
+		the file and the value will be the file. This is a two-step
+		process when wanting to grab a folder from a more previous commit.
+		If you are at Commit_6, but you wanted the version of foo.txt from 
+		Commit_2, then you will go to Commit_2 and view its map. Furthermore,
+		The signifigance of the pointer to the previous commit is crucial 
+		when branching, see below.
+
+							   Commit_3
+							  /
+		commit_1 <-- commit_2
+							 \
+							  Commit_4
+
+		Commit_4's pointer is pointing at Commit_2, not Commit_3. 
+		So, the previous pointer has to be recorded, not just pointing 
+		to commit_id -= 1. Otherwise, Commit_4 would point to Commit_3.
+	}
+		
+		Base case situation
+			user types "java Gitlite commit [messsage]"
+			failure cases
+				if no files are in the staging area, print "No changes added to the commit"
+				exit
+				check & record if there is a commit message
+				if there is no message, print "Please enter a commit message"
+				exit
+			save & store the staged commit to the a new linked list node (ASK: or are you supposed to save the commit before it + staged?)
+		
+		Record id 
+			commit id += 1
+		
+		Record time 
+			from date, record the time of commit
+			return
+
+		Record message
+			put user input on the node
+			return
+
+		Commit Object will be the actual commit, meaning the additional node to the tree or LL
+		
+		Log
+			user types "java Gitet log"
+			for loop to iterte through linked list @ head pointer
+				print(===== latest commit id\n, time\n, message)
+
+		Global log
+			use types "java Gitlite global-log"
+				for loop to iterte through linked list
+				print(===== latest commit id\n, time\n, message)
+
+		Find
+			user types "java Gitlite find [commit message]"
+			failure cases
+				if !commitMessage, print("Found no commit with that message")
+			print(commitID)
+	*/
+
+============== Branch Class/Object ==============
+
+	/* Branch class
+
+		Status
+			print("=== Branches ===")
+			if on branch, print ("*" + branchName)
+			for (branches : tree) print(file + \n)
+			print \n
+
+			print("=== Staged Files")
+			for (files : Stage) print(file + \n)
+			print \n
+
+			print("=== Files Marked for Removal")
+			for (files : removed) print (file + \n)
+			
+		Checkout
+			user types "java Gitlite checkout [file name]"
+				iterate through files in previous commit to see if one exists
+				if file isn't in the previous commit, print("File does not exist in the most recent commit")
+					exit
+				ASK: how- Restores the given file in the working directory to its state at the commit at the head of the current branch
+					check to see if file exists in previous ndoe?
+			user types "java Gitlite checkout [commit id] [file name]"
+				iterate through commit id's to see if one exists
+				if commit id doesn't exist, print("No commit commit with that id exists")
+				else if file does not exist, print("File does not exist in that commit")
+			user types "java Gitlite checkout [branch name]"
+				iterate through tree? to see if branch exists
+				if branch doesn't exist, print("File does not exist in the most recent commit")
+				if in branch, print("No need to checkout the branch")
+
+		Branch
+			user types "java Gitlite branch [branch name]"
+			if branch name already exists, print("A branch with that name already exists")
+				exit
+			else
+				if head pointer points to master branh
+				create a new object with new Branch
+				in the commit tree, creates a new pointer that points to the master branch also
+
+		Remove Branch
+			user types "java Gitlite rm-branch [branch name]"
+			failure cases
+				if branch name doesn't exist
+					exit
+				else if trying to remove current branch, print("Cannot remove the current branch")
+			Delete branch by deleting pointer
+
+		Reset
+			user types "java Gitlite reset [commit id]"
+			failure case
+				if commit id doesn't exist, print("No commit with that id exists")
+					exit
+			move pointer to given commit id
+			move current branch head to given commit id node
+
+		Merge
+			user types "java Gitlite merge [branch name]"
+			failure cases
+				if branch name doesn't exist, print("A branch with that name does not exist")
+					exit
+				if branch name merging with current branch, print("Cannot merge a branch with itself")
+					exit
+
+		// unsure pass this point
+*/
+
+=============== unsure if still needed ================= 
+/*
+		records files added & removed of staging area since last commit
+		
+		public class Stage class {
+			// File input
+			// latestCommit ---> would this be the pointer? Can a pointer be a type?
+			// newFilesStaged ---> should this be a linkedlist or an arraylist
+			// filesForRemoval ---> ^^^
+			// stagedFiles ---> ^^^
+
+			public Stage(type?? latestCommit) {
+				this.commit = latestCommit;
+				newFilesStaged = new AL or LL;
+				filesForRemoval = new AL or LL;
+				stagedFiles = new AL or LL;
+			}
+		}
+
+		Remove command
+			user types "java Gitlite rm [filename]"
+			failure cases
+				if file does not exist, print("File not found")
+				exit
+				if file is not staged, print("No reason to remove the file")
+				exit
+			remove file from stage (ASK: how do you represent this in LL?)
+
+			public remove(String fileName) {
+				if (!f.exists) {
+					System.out.println("File not found");
+				}
+				if (stagedFiles.???(fileName)) {
+					stagedFiles.remove(fileName);
+					filesForRemoval.add(fileName);
+				} else {
+					System.out.println("No reason to remove the file"); //if unstaged
+				}
+			}
+
+		private unchangedFile function
+			File uf = new File(fileName);
+			if (latestCommit.contains(fileName)) {
+				File backupFile = latestCommit.getFile(fileName);
+				if they are the same ???
+			}
+	*/
+
+==================================
+	
+/* Given 
+    public static void main(String[] args) {
+    	Console console = System.console();
+    	String ### = console.readLine("###");
+    }
+}
+ */
